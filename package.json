@@ -1,6 +1,6 @@
 {
   "name": "Chief",
-  "version":"0.0.1",
+  "version": "0.0.1",
   "description": "Static site generator",
   "main": "server.js",
   "author": "Liam Hegenbarth",
@@ -8,6 +8,8 @@
   "devDependencies": {
     "body-parser": "~1.0.1",
     "express": "~4.0.0",
-    "jade": "^1.11.0"
+    "jade": "^1.11.0",
+    "marked": "^0.3.5",
+    "toml": "^2.3.0"
   }
 }
