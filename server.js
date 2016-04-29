@@ -41,8 +41,21 @@ var Chief = function Chief()
 
 	Chief.map = {};
 
-	Chief.recurse = function recurse( file, object, dirs )
+	Chief.recurse = function recurse( file, object, dirs, depth )
 	{
+		// console.log(dirs);
+
+		if ( depth > 0 )
+		{
+			// object.meta = {
+
+			// 	depth 	: depth,
+			// 	dirs 	: dirs[0],
+			// 	slug 	: file.replace('./content/', '').split(dirs[0])[0] + dirs[0].replace(/.toml|.md/g,'')
+
+			// }
+		}
+
 
 		if ( dirs[0].indexOf('.toml') != -1 )
 		{
@@ -51,18 +64,21 @@ var Chief = function Chief()
 		else if ( dirs[0].indexOf('.md') != -1 )
 		{
 
-			var data 		= fs.readFileSync(file, 'utf8'),
-				document 	= toml.parse(data.split('+++')[1]);
+			var data 		= fs.readFileSync(file, 'utf8').split('+++'),
+				document 	= toml.parse(data[1]);
 
-			document.markdown = marked(data.split('+++')[2]);
+			document.markdown = marked(data[2]);
 
-			if ( object.hasOwnProperty('local') )
+			if ( depth > 0 )
 			{
-				object.local.push( document );
-			}
-			else
-			{
-				object.local = [ document ];
+				if ( object.hasOwnProperty('local') )
+				{
+					object.local.push( document );
+				}
+				else
+				{
+					object.local = [ document ];
+				}
 			}
 		}
 		else
@@ -74,12 +90,22 @@ var Chief = function Chief()
 			}
 			else
 			{
-				var newObject = object[ dirs[0] ] = {};
+				var newObject = object[ dirs[0] ] = {
+
+					meta : {
+
+						depth 	: ++depth,
+						slug 	: dirs[0],
+						href 	: '/' + dirs[0],
+						path 	: file.replace('./content/', '').split(dirs[0])[0] + dirs[0].replace(/.toml|.md/g,'')
+
+					}
+				};
 			}
 			
 			dirs.shift();
 
-			Chief.recurse( file, newObject, dirs );
+			Chief.recurse( file, newObject, dirs, ++depth );
 		}
 
 	}
@@ -89,36 +115,31 @@ var Chief = function Chief()
 	{
 
 		var files = glob.sync('./content/**/*.*(md|toml)');
-		
 
-			// if ( err )
-			// {
-			// 	console.log(err);
-			// }
-			// else
-			// {
+		for ( var file = 0; file < files.length; file++ )
+		{
 
-				for ( var file = 0; file < files.length; file++ )
-				{
+			var dirs = files[file].replace('./content/', '').split('/');
 
-					var dirs = files[file].replace('./content/', '').split('/');
+			Chief.recurse( files[file], Chief.map, dirs, 0 );
 
-					Chief.recurse( files[file], Chief.map, dirs );
-
-				}
-			// }
-
-			// console.log(Chief.map);
-		return Chief.map;
+		}
 
 	}
 
 	Chief.init();
 
-	// console.log(Chief.map);
+
 	
 	app.get('*', function(req, res) {
-console.log({
+
+		console.log(req.url);
+
+		// console.log(Chief.map);
+
+		console.log(Chief.map.cases);
+
+		console.log({
 			
 			Chief : Chief.map
 
@@ -135,23 +156,6 @@ console.log({
 
 }();
 
-// Chief();
-
-// var Clara = Chief();
-
-// console.log(Chief.init());
-
-// app.get('*', function(req, res) {
-
-
-// 	res.render('index', 
-// 	{
-		
-// 		Chief : Chief.map
-
-// 	});
-
-// });
 
 
 server.listen( process.env.PORT || 8080 );
