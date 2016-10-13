@@ -1,5 +1,5 @@
 +++
-title = "Hello Clara"
+title = "Projects"
 heading = "Project local"
 description = "spf13-vim is a cross platform distribution of vim plugins and resources for Vim."
 tags = [ ".vimrc", "plugins", "spf13-vim", "vim" ]
@@ -11,6 +11,6 @@ categories = [
 slug = "spf13-vim-3-0-release-and-new-website"
 +++
 
-## You absolute monster
+## Project person
 
-This is some markdown about Clara
+This is some markdown about projects

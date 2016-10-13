@@ -10,13 +10,49 @@ html
 
 		h1= Chief.local.title
 
-		!= Chief.markdown
+		!= Chief.local.markdown
 
 		ul
 			each key in Chief.local
 
 				li= key
 
+		
+		h4 Projects
+
+		ul
+			each page, key in Chief.pages.projects.pages
+
+				li
+					a(href=page.href)= page.title
+
+					//- each value, key in page
+					//- 	br
+					//- 	span= value
+					//- 	br
+					//- 	span= key
+					//- 	br
+					//- 	span -----
+
+
+		h4 Case Studies
+
+		ul
+			each page, key in Chief.pages.cases.pages
+
+				li
+					a(href=page.href)= page.title
+
+					//- each value, key in page
+					//- 	br
+					//- 	span= value
+					//- 	br
+					//- 	span= key
+					//- 	br
+					//- 	span -----
+
 		//- h3= Chief.local.title
 
 		//- script(src="assets/js/main.js")
+
+		code!= Chief.projects
